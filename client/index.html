@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>wsjssdk share client</title>
+</head>
+<body>
+wsjssdk share client
+</body>
+
+<!-- 引入 jssdk -->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script>
+  (async () => {
+    // 去掉 URL #及后面的部分
+    const validateUrl = location.href.split('#')[0]
+
+    const jsconfig = await fetch(`http://localhost:3112/api/jsconfig?url=${ encodeURIComponent(validateUrl) }`) // 请求服务获取 js 配置
+
+    wx.config(jsconfig);
+
+    wx.ready(function () {   // 需在用户可能点击分享按钮前就先调用
+      wx.updateAppMessageShareData({ // 分享到微信聊天
+        title: '', // 分享标题
+        desc: '', // 分享描述
+        link: validateUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: '', // 分享图标
+        success: function () {
+          // 设置成功
+        }
+      })
+
+      wx.updateTimelineShareData({ // 分享到朋友圈
+        title: '',
+        link: validateUrl,
+        imgUrl: '',
+        success: function () {
+        }
+      })
+
+    });
+  })()
+</script>
+</html>
